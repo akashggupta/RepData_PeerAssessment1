@@ -1,0 +1,104 @@
+---
+title: "Reproducible Research"
+output: html_document
+---
+```{r}
+library(plyr)
+library(ggplot2)
+```
+# Loading and Processing the data
+
+### loading the Data
+```{r}
+setwd("~/repdata_data_activity")
+activity <- read.csv("activity.csv")
+```
+### cleaning the Data
+```{r}
+activity$day <- weekdays(as.Date(activity$date))
+clean<-activity[!is.na(activity$steps),]
+```
+
+
+# Mean total number of steps taken per day
+```{r}
+sumTable <- aggregate(activity$steps ~ activity$date, FUN=sum )
+colnames(sumTable)<- c("Date", "Steps")
+```
+
+### total number of steps taken per day
+```{r}
+sumTable
+```
+### histogram of the total number of steps taken each day
+```{r fig.height=4}
+hist(sumTable$Steps, xlab="Steps", main = "Total Steps per Day")
+```
+
+### mean and median of the total number of steps taken per day
+```{r}
+as.integer(mean(sumTable$Steps))
+as.integer(median(sumTable$Steps))
+```
+
+# Average daily activity pattern
+
+### time series plot (i.e. \color{red}{\verb|type = "l"|}type="l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
+```{r}
+# Average number of steps of every interval 
+intervalTable <- ddply(clean, .(interval), summarize, Avg = mean(steps))
+p <- ggplot(intervalTable, aes(x=interval, y=Avg), xlab = "Interval", ylab="Average Number of Steps")
+p + geom_line()+xlab("Interval")+ylab("Average Number of Steps")+ggtitle("Average Number of Steps per Interval")
+
+```
+
+### interval that has maximum nuber of steps on average across all the days
+```{r}
+maxSteps <- max(intervalTable$Avg)
+intervalTable[intervalTable$Avg==maxSteps,1]
+```
+
+# Imputing missing values
+
+### total number of missing values in the dataset
+```{r}
+nrow(activity[is.na(activity$steps),])
+```
+
+### filling the missiing value
+```{r}
+avgTable <- ddply(clean, .(interval, day), summarize, Avg = mean(steps))
+nadata<- activity[is.na(activity$steps),]
+newdata<-merge(nadata, avgTable, by=c("interval","day"))
+```
+
+### creating the new dataset same as original
+```{r}
+newdata2<- newdata[,c(5,4,1,2)]
+colnames(newdata2)<- c("steps", "date", "interval", "day")
+mergeData <- rbind(clean, newdata2)
+```
+
+### histogram of the total number of steps taken each day
+```{r}
+sumTable2 <- aggregate(mergeData$steps ~ mergeData$date, FUN=sum )
+colnames(sumTable2)<- c("Date", "Steps")
+hist(sumTable2$Steps, breaks=5, xlab="Steps", main = "Total Steps per Day with NAs Fixed", col="Black")
+hist(sumTable$Steps, breaks=5, xlab="Steps", main = "Total Steps per Day with NAs Fixed", col="Grey", add=TRUE)
+legend("topright", c("Imputed Data", "Non-NA Data"), fill=c("black", "grey") )
+```
+
+### mean and median of new dataset in which na's are taken care
+```{r}
+mean(sumTable2$Steps)
+median(sumTable2$Steps)
+```
+
+# Differences in activity patterns between weekdays and weekends
+```{r}
+mergeData$DayCategory <- ifelse(mergeData$day %in% c("Saturday", "Sunday"), "Weekend", "Weekday")
+intervalTable2 <- ddply(mergeData, .(interval, DayCategory), summarize, Avg = mean(steps))
+p <- ggplot(intervalTable2, aes(x=interval, y=Avg), xlab = "Interval", ylab="Average Number of Steps")
+p + geom_line()+xlab("Interval")+ylab("Average Number of Steps")+ggtitle("Average Number of Steps per Interval Based on day type")+facet_grid(rows = vars(DayCategory))
+```
+
