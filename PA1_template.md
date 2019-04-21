@@ -153,7 +153,7 @@ nrow(activity[is.na(activity$steps),])
     ## [1] 2304
 
 ### filling the missiing value
-
+My strategy for filling in NAs will be to substitute the missing steps with the average 5-minute interval based on the day of the week.
 ``` r
 avgTable <- ddply(clean, .(interval, day), summarize, Avg = mean(steps))
 nadata<- activity[is.na(activity$steps),]
