@@ -130,7 +130,7 @@ p <- ggplot(intervalTable, aes(x=interval, y=Avg), xlab = "Interval", ylab="Aver
 p + geom_line()+xlab("Interval")+ylab("Average Number of Steps")+ggtitle("Average Number of Steps per Interval")
 ```
 
-![](PA1_template_files/figure-markdown_github/unnamed-chunk-8-1.png)
+![](https://github.com/akashggupta/RepData_PeerAssessment1/blob/master/figure-html/unnamed-chunk-8-1.png)
 
 ### interval that has maximum nuber of steps on average across all the days
 
