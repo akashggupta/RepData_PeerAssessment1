@@ -178,7 +178,7 @@ hist(sumTable$Steps, breaks=5, xlab="Steps", main = "Total Steps per Day with NA
 legend("topright", c("Imputed Data", "Non-NA Data"), fill=c("black", "grey") )
 ```
 
-![](PA1_template_files/figure-markdown_github/unnamed-chunk-13-1.png)
+![](https://github.com/akashggupta/RepData_PeerAssessment1/blob/master/figure-html/unnamed-chunk-13-1.png)
 
 ### mean and median of new dataset in which na's are taken care
 
@@ -204,4 +204,4 @@ p <- ggplot(intervalTable2, aes(x=interval, y=Avg), xlab = "Interval", ylab="Ave
 p + geom_line()+xlab("Interval")+ylab("Average Number of Steps")+ggtitle("Average Number of Steps per Interval Based on day type")+facet_grid(rows = vars(DayCategory))
 ```
 
-![](PA1_template_files/figure-markdown_github/unnamed-chunk-15-1.png)
+![](https://github.com/akashggupta/RepData_PeerAssessment1/blob/master/figure-html/unnamed-chunk-15-1.png)
