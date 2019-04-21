@@ -102,7 +102,7 @@ sumTable
 hist(sumTable$Steps, xlab="Steps", main = "Total Steps per Day")
 ```
 
-![](PA1_template_files/figure-markdown_github/unnamed-chunk-6-1.png)
+![](https://github.com/akashggupta/RepData_PeerAssessment1/blob/master/figure-html/unnamed-chunk-6-1.png)
 
 ### mean and median of the total number of steps taken per day
 
